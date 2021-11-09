@@ -47,6 +47,8 @@ github_username:  bsiever
 
 # Build settings
 theme: bulma-clean-theme
+remote_theme: bulma-clean-theme
+
 #theme: minima
 
 # Plugins below jekyll-feed are default GitHub pages plugins

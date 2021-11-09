@@ -9,6 +9,7 @@ hide_footer: true
 
 ---
 
+v2
 ## Intro
 
 I've written several different hardware-oriented extensions for the micro:bit. This blog documents tips/tricks I use as part of development. This is mainly focused on extensions that require C++ code.  The extensions that I've written all provide examples of why C++ may be merited:
@@ -21,7 +22,16 @@ I've written several different hardware-oriented extensions for the micro:bit. T
 I use my "WebUSB" console example: [Console](https://bsiever.github.io/microbit-webusb/) ([source](https://github.com/bsiever/microbit-webusb))
 
 1. Connect
-2. 
+
+
+## Error Codes
+
+[Microbit.org Error Code list](https://support.microbit.org/support/solutions/articles/19000016969-micro-bit-error-codes)
+[Device Error Codes](https://support.microbit.org/support/solutions/articles/19000016969-micro-bit-error-codes)
+[DAL (v1]) ErrorNo.h](https://github.com/lancaster-university/microbit-dal/blob/master/inc/core/ErrorNo.h)
+[CODAL Compatibility codes](https://github.com/lancaster-university/codal-microbit/blob/master/inc/compat/MicroBitCompat.h)
+[CODAL Core ErrorNo.h](https://github.com/lancaster-university/codal-core/blob/master/inc/core/ErrorNo.h)
+
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Orci dapibus ultrices in iaculis nunc sed. Scelerisque felis imperdiet proin fermentum leo. Risus nec feugiat in fermentum. Ligula ullamcorper malesuada proin libero nunc consequat. A cras semper auctor neque vitae tempus quam. Lacus sed viverra tellus in hac habitasse. Purus sit amet volutpat consequat mauris nunc. Ultricies leo integer malesuada nunc. Blandit cursus risus at ultrices mi. Mus mauris vitae ultricies leo integer. Laoreet id donec ultrices tincidunt arcu non. Bibendum enim facilisis gravida neque convallis a cras. Volutpat sed cras ornare arcu dui vivamus arcu felis. Hendrerit gravida rutrum quisque non tellus orci ac. Mauris a diam maecenas sed enim. In hendrerit gravida rutrum quisque non tellus orci ac auctor.
 

@@ -46,9 +46,9 @@ github_username:  bsiever
 
 
 # Build settings
-theme: bulma-clean-theme
+#theme: https://github.com/bsiever/bulma-clean-theme
 # Specify the remote theme
-remote_theme: bsiever/bulma-clean-theme
+#remote_theme: bsiever/bulma-clean-theme
 
 #theme: minima
 

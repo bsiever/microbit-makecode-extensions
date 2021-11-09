@@ -9,7 +9,7 @@ hide_footer: true
 
 ---
 
-v2
+v3
 ## Intro
 
 I've written several different hardware-oriented extensions for the micro:bit. This blog documents tips/tricks I use as part of development. This is mainly focused on extensions that require C++ code.  The extensions that I've written all provide examples of why C++ may be merited:

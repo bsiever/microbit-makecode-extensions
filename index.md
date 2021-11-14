@@ -8,23 +8,38 @@ toc: true
 hide_footer: true 
 
 ---
-## Intro
+## Experience and Extensions
 
-This blog is a summary of my experience writing extensions for the micro:bit. I've really enjoyed contributing to the micro:bit community for a variety of reasons:
+This is a summary of my experiences writing extensions for the micro:bit. 
 
-* I think the platform is really fantastic.  It's cheap, but quite powerful.  I think it's a great tool to make computing and computing hardware more accessible.
-* Extensions can be technically challenging but  have a pretty small scope.  This is an area where I can contribute things that are really useful, but they are small enough to fit my limited free time.
+I've really enjoyed contributing to the micro:bit community for a variety of reasons:
 
-I've written now written three official extensions and one "un-official" extensions.  Each has had different challenges and improved my ability to work with the platform:
+* I think the platform is  fantastic.  It's a cheap, powerful tool to make computing and "making" more accessible.
+* Extensions can be technically challenging, but they have a small scope.  This combination allows me to use my technical skills to provide useful things in a way that fits my limited free time.
+  
+I've written now written three official extensions and one "un-official" extensions.  Each has had different challenges and improved my ability to work with the platform
 
-* [Time & Date](https://makecode.microbit.org/pkg/bsiever/microbit-pxt-timeanddate) provides a software based real-time clock.  This extension required a deep understanding of the micro:bit's underlying clocks and run-time. Designing the blocks required careful consideration of semantics needed to work with "time" in a block-based language.
-* [DSTemp](https://makecode.microbit.org/pkg/bsiever/microbit-dstemp) provides support for the Dallas Semiconductor (no Maxim) 18B20 temperature sensor.  This was developed to support science curricular materials for [WashU](https://wustl.edu/)'s [Institute for School Partnership](https://schoolpartnership.wustl.edu/).  The 18B20 has a unique serial protocol and requires precise timing.  This required a fair amount of low-level testing/debugging.
-  * This [Video Overview](https://vimeo.com/445128371) shows an experiment using the extension and sensors.  Here's the guide for teachers: [mySci Extensions](https://docs.google.com/presentation/d/1CIyQK71pNGHjf5gfHqg3yD-sWP0rnXZlt6-MK9j_ISk/edit#slide=id.g5475e6f318_0_0)
-  * I also made a [PCB carrier](https://github.com/bsiever/DS18B20Carrier) board to make it classroom-friendly:<br />![Carrier Board](https://github.com/bsiever/DS18B20Carrier/blob/main/ConnectedToMB.JPG?raw=true){: width="250" }
-* [DSTemp 2-wire](https://makecode.microbit.org/pkg/bsiever/microbit-dstemp-2wire) is another variation that supports the 18B20.  There are a lot of [counterfeit](https://github.com/cpetrich/counterfeit_DS18B20) sensors that are sold as DS18B20s, but some genuine DS18B20s support "parasitic" power mode and can run without a separate power supply. I was able to get parasitic power mode to work with the micro:bit's internal pull-up.  Technically this isn't quite appropriate, but it has worked for my test cases and reduces the wiring to just two wires, which teachers can assemble themselves ([instructions here](https://github.com/bsiever/microbit-dstemp-2wire/blob/master/README.md)):<br /> ![](https://github.com/bsiever/microbit-dstemp-2wire/blob/master/docs/static/7_Final.jpg?raw=true){: width="250" }
+### Time & Date
 
-The above are all "official" extensions that are listed in the MakeCode editor.  I've also done one "unofficial extension":
-* [i2cPins](https://github.com/bsiever/microbit-pxt-i2cpins), which was sponsored by [MakeKit](https://www.makekit.no/), allows the external i2c on the micro:bit v2 to be re-directed to different pins. The heart of it is just 5 lines of C++, but it required a deep dive into the micro:bit runtime to figure out _which_ lines.
+[Time & Date](https://makecode.microbit.org/pkg/bsiever/microbit-pxt-timeanddate) provides a software based real-time clock.  This extension required a deep understanding of the micro:bit's underlying clocks and run-time. Designing the blocks required careful consideration of semantics needed to work with "time" in a block-based language.
+
+### DSTemp
+
+[DSTemp](https://makecode.microbit.org/pkg/bsiever/microbit-dstemp) provides support for the Dallas Semiconductor (no Maxim) 18B20 temperature sensor.  This was developed to support science curricular materials for [WashU](https://wustl.edu/)'s [Institute for School Partnership](https://schoolpartnership.wustl.edu/).  The 18B20 has a unique serial protocol and requires precise timing.  This required a fair amount of low-level testing/debugging.
+
+This [Video Overview](https://vimeo.com/445128371) shows an experiment using the extension and sensors.  Here's the guide for teachers: [mySci Extensions](https://docs.google.com/presentation/d/1CIyQK71pNGHjf5gfHqg3yD-sWP0rnXZlt6-MK9j_ISk/edit#slide=id.g5475e6f318_0_0)
+
+I also made a [PCB carrier](https://github.com/bsiever/DS18B20Carrier) board to make it classroom-friendly:<br />![Carrier Board](https://github.com/bsiever/DS18B20Carrier/blob/main/ConnectedToMB.JPG?raw=true){: width="250" }
+
+### DSTemp 2-wire
+
+[DSTemp 2-wire](https://makecode.microbit.org/pkg/bsiever/microbit-dstemp-2wire) is another variation that supports the 18B20.  There are a lot of [counterfeit](https://github.com/cpetrich/counterfeit_DS18B20) sensors that are sold as DS18B20s, but some genuine DS18B20s support "parasitic" power mode and can run without a separate power supply. I was able to get parasitic power mode to work with the micro:bit's internal pull-up.  Technically this isn't quite appropriate, but it has worked for my test cases and reduces the wiring to just two wires, which teachers can assemble themselves ([instructions here](https://github.com/bsiever/microbit-dstemp-2wire/blob/master/README.md)):<br /> ![](https://github.com/bsiever/microbit-dstemp-2wire/blob/master/docs/static/7_Final.jpg?raw=true){: width="250" }
+
+### i2c Pins
+
+[i2cPins](https://github.com/bsiever/microbit-pxt-i2cpins), which was sponsored by [MakeKit](https://www.makekit.no/), allows the external i2c on the micro:bit v2 to be re-directed to different pins. The heart of it is just 5 lines of C++, but it required a deep dive into the micro:bit runtime to figure out _which_ lines.
+
+Unlike the others, I haven't asked to have i2c Pins considered as an official extension (yet).
 
 
 

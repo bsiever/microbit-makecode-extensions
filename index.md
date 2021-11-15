@@ -8,26 +8,29 @@ toc: true
 hide_footer: true 
 
 ---
-## Experience and Extensions
 
-This is a summary of my experiences writing extensions for the micro:bit. 
+## Intro
 
-I've really enjoyed contributing to the micro:bit community for a variety of reasons:
+This is a summary of my experiences writing extensions for the micro:bit.  I've really enjoyed contributing to the micro:bit community for a variety of reasons:
 
 * I think the platform is  fantastic.  It's a cheap, powerful tool to make computing and "making" more accessible.
 * Extensions can be technically challenging, but they have a small scope.  This combination allows me to use my technical skills to provide useful things in a way that fits my limited free time.
-  
-I've written now written three official extensions and one "un-official" extensions.  Each has had different challenges and improved my ability to work with the platform
+
+## My Extensions
+
+I've written three official extensions and one un-official extensions.  Each has had different challenges and improved my ability to work with the platform
 
 ### Time & Date
 
-[Time & Date](https://makecode.microbit.org/pkg/bsiever/microbit-pxt-timeanddate) provides a software based real-time clock.  This extension required a deep understanding of the micro:bit's underlying clocks and run-time. Designing the blocks required careful consideration of semantics needed to work with "time" in a block-based language.
+[Time & Date](https://makecode.microbit.org/pkg/bsiever/microbit-pxt-timeanddate) provides a software based real-time clock.  This extension required a deep understanding of the micro:bit's underlying clocks and run-time. Designing the blocks required careful consideration of semantics needed to work with time in a block-based language.
 
 ### DSTemp
 
-[DSTemp](https://makecode.microbit.org/pkg/bsiever/microbit-dstemp) provides support for the Dallas Semiconductor (no Maxim) 18B20 temperature sensor.  This was developed to support science curricular materials for [WashU](https://wustl.edu/)'s [Institute for School Partnership](https://schoolpartnership.wustl.edu/).  The 18B20 has a unique serial protocol and requires precise timing.  This required a fair amount of low-level testing/debugging.
+[DSTemp](https://makecode.microbit.org/pkg/bsiever/microbit-dstemp) provides support for the Dallas Semiconductor (now Maxim) 18B20 temperature sensor.  This was created for [WashU](https://wustl.edu/)'s [Institute for School Partnership](https://schoolpartnership.wustl.edu/)(ISP), which developed science curricular materials that require recording temperature over time.
 
-This [Video Overview](https://vimeo.com/445128371) shows an experiment using the extension and sensors.  Here's the guide for teachers: [mySci Extensions](https://docs.google.com/presentation/d/1CIyQK71pNGHjf5gfHqg3yD-sWP0rnXZlt6-MK9j_ISk/edit#slide=id.g5475e6f318_0_0)
+This [Video Overview](https://vimeo.com/445128371) shows an experiment using the extension and two sensors.  Here's the guide for teachers developed by the ISP: [mySci Extensions](https://docs.google.com/presentation/d/1CIyQK71pNGHjf5gfHqg3yD-sWP0rnXZlt6-MK9j_ISk/edit#slide=id.g5475e6f318_0_0)
+
+The 18B20 has a unique serial protocol and requires precise timing.  This required a fair amount of low-level testing/debugging.
 
 I also made a [PCB carrier](https://github.com/bsiever/DS18B20Carrier) board to make it classroom-friendly:<br />![Carrier Board](https://github.com/bsiever/DS18B20Carrier/blob/main/ConnectedToMB.JPG?raw=true){: width="250" }
 
@@ -39,54 +42,117 @@ I also made a [PCB carrier](https://github.com/bsiever/DS18B20Carrier) board to 
 
 [i2cPins](https://github.com/bsiever/microbit-pxt-i2cpins), which was sponsored by [MakeKit](https://www.makekit.no/), allows the external i2c on the micro:bit v2 to be re-directed to different pins. The heart of it is just 5 lines of C++, but it required a deep dive into the micro:bit runtime to figure out _which_ lines.
 
-Unlike the others, I haven't asked to have i2c Pins considered as an official extension (yet).
+Unlike the others, I haven't asked to have "i2c Pins" considered for an official extension (yet).
+
+## Getting Started
+
+### Dev Tools
+
+Extensions can be developed [entirely in MakeCode](https://www.youtube.com/watch?v=ztrm4XehfGo), which is a pretty good approach for purely TypeScript-based extensions.  I think it's a poor choice for extensions that use C++ (like all of mine) for two reasons:
+1. You don't get feedback on C++ compilation errors!
+2. It uses a cloud-based build system, which is very slow.
+
+Consequently, I use a local build system.  
+
+#### Installing local build system (macOS on an M1)
+
+1. Install [Homebrew](https://brew.sh/)
+2. Install [Node.js](https://nodejs.org/en/)
+3. Open a terminal window and use `npm` to install [`pxt`](https://github.com/microsoft/pxt): `npm install -x pxt`.
+   * `pxt` is the command line interface for the "Programming eXperience Toolkit", which is the name of MicroSoft's open source editor (MakeCode).
+
+There are two ways to do a local build:  
+1. Using a [Docker](https://en.wikipedia.org/wiki/Docker_(software)) image that contains the build system.  In my experience this was slow and still made it difficult to get compiler feedback.
+2. Using [`yotta`](https://yottabuild.org/). Yotta was meant to provide a cross-platform build system for ARM mBed targets.  Yotta is now depricated and is not longer being updated/maintained. None the less, I build extensions with Yotta.
+
+To install yotta:
+
+1. Install needed packages and the ARM compiler: `brew install cmake ninja arm-none-eabi-gcc`
+2. Install `srecord`: `brew install srecord`
+3. Install `yotta` (which is a python package): `sudo pip3 install yotta`
+4. I am working on an M1 mac.  When I installed there were some inconsistencies:
+   1. I had to edit two of the yotta files, `/opt/homebrew/lib/python3.9/site-packages/yotta/lib/[pack,target].py` and remove the `@fsutils.dropRootPrivs` annotation (See [Yotta Issue #863](https://github.com/ARMmbed/yotta/issues/863))
+   2. `cmake` wasn't handling the M1 architecture correctly.  I had to edit `/opt/homebrew/Cellar/cmake/3.20.1/share/cmake/Modules/Platform/Darwin-Initialize.cmake` and comment out `set(_CMAKE_APPLE_ARCHS_DEFAULT "${CMAKE_HOST_SYSTEM_PROCESSOR}")` (which was on line #36 for me)
+
+## Projects
+
+I start by cloning an existing project and updating settings as needed.  Usually I start with my [DSTemp](https://github.com/bsiever/microbit-dstemp) extension since it is relatively simple.  It has just two blocks, both a TypeScript and a C++ file, and shows how to connect a part in the simulator.
+
+
+### Files
+
+Although this isn't very significant, I start by changing file names.  I rename `dstemp.ts` and `dstemp.cpp` to reflect my new project. If the new project won't use a simulator image, remove the `parts` directory and files.  Otherwise rename and edit them. 
+
+### pxt.json
+
+The `pxt.json` is the magic that describes the entire structure of the repo.  Here's the description of the interface/structure: https://github.com/microsoft/pxt/blob/master/docs/extensions/pxt-json.md
+
+Update the main descriptive items (`name`, `version`, `description`, and `dependencies`).  If any files were renamed, be sure to update them (`files`).  
 
 
 
+
+## Running (w/ Yotta)
+
+### Command Line Build
+
+```
+export PXT_NODOCKER=1
+pxt build --local 
+```
+
+Note that this builds for both DAL and CODAL.  
+### Command Line Build & Deploy
+
+```
+export PXT_NODOCKER=1
+pxt deploy --local 
+```
+
+### Local Server
+
+```
+export PXT_NODOCKER=1
+pxt serve --local
+```
+
+### CODAL vs. DAL
+
+```
+#if MICROBIT_CODAL
+#else
+#endif
+```
+
+### Bluetooth
+
+```
+        // May also be using 24-bit timer
+#ifdef SOFTDEVICE_PRESENT
+        if (!ble_running()) // Only configTimer if either no soft-dev or no ble
+#endif
+                configTimer();
+#endif
+```
 
 ## Debugging
 
-I use my "WebUSB" console example: [Console](https://bsiever.github.io/microbit-webusb/) ([source](https://github.com/bsiever/microbit-webusb))
+I use my "WebUSB" console example: [Console](https://bsiever.github.io/microbit-webusb/) ([source](https://github.com/bsiever/microbit-webusb)).  It can't be used while MakeCode is connected to the micro:bit. 
 
 1. Connect
 
 
 ## Error Codes
 
-[Microbit.org Error Code list](https://support.microbit.org/support/solutions/articles/19000016969-micro-bit-error-codes)
-[Device Error Codes](https://support.microbit.org/support/solutions/articles/19000016969-micro-bit-error-codes)
-[DAL (v1]) ErrorNo.h](https://github.com/lancaster-university/microbit-dal/blob/master/inc/core/ErrorNo.h)
-[CODAL Compatibility codes](https://github.com/lancaster-university/codal-microbit/blob/master/inc/compat/MicroBitCompat.h)
-[CODAL Core ErrorNo.h](https://github.com/lancaster-university/codal-core/blob/master/inc/core/ErrorNo.h)
+* [Microbit.org Error Code list](https://support.microbit.org/support/solutions/articles/19000016969-micro-bit-error-codes)
+* [Device Error Codes](https://support.microbit.org/support/solutions/articles/19000016969-micro-bit-error-codes)
+* [DAL (v1) ErrorNo.h](https://github.com/lancaster-university/microbit-dal/blob/master/inc/core/ErrorNo.h)
+* [CODAL Compatibility codes](https://github.com/lancaster-university/codal-microbit/blob/master/inc/compat/MicroBitCompat.h)
+* [CODAL Core ErrorNo.h](https://github.com/lancaster-university/codal-core/blob/master/inc/core/ErrorNo.h)
 
+## MicroBit Sources
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Orci dapibus ultrices in iaculis nunc sed. Scelerisque felis imperdiet proin fermentum leo. Risus nec feugiat in fermentum. Ligula ullamcorper malesuada proin libero nunc consequat. A cras semper auctor neque vitae tempus quam. Lacus sed viverra tellus in hac habitasse. Purus sit amet volutpat consequat mauris nunc. Ultricies leo integer malesuada nunc. Blandit cursus risus at ultrices mi. Mus mauris vitae ultricies leo integer. Laoreet id donec ultrices tincidunt arcu non. Bibendum enim facilisis gravida neque convallis a cras. Volutpat sed cras ornare arcu dui vivamus arcu felis. Hendrerit gravida rutrum quisque non tellus orci ac. Mauris a diam maecenas sed enim. In hendrerit gravida rutrum quisque non tellus orci ac auctor.
+### Codal
 
-Scelerisque varius morbi enim nunc faucibus a pellentesque sit. Quis auctor elit sed vulputate. Cras sed felis eget velit aliquet sagittis id consectetur purus. Enim sit amet venenatis urna cursus eget nunc. A cras semper auctor neque vitae tempus. Amet commodo nulla facilisi nullam vehicula. Eu sem integer vitae justo eget. Vulputate ut pharetra sit amet aliquam. Risus sed vulputate odio ut enim blandit. Laoreet non curabitur gravida arcu ac tortor dignissim convallis aenean. Mattis ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget. Tristique senectus et netus et malesuada fames ac turpis egestas. Lorem sed risus ultricies tristique nulla aliquet enim tortor.
-
-A arcu cursus vitae congue. Enim praesent elementum facilisis leo vel fringilla. Potenti nullam ac tortor vitae purus. Pulvinar mattis nunc sed blandit libero. Vitae aliquet nec ullamcorper sit amet risus nullam. Ornare lectus sit amet est placerat in egestas. Gravida cum sociis natoque penatibus et magnis dis parturient montes. In nisl nisi scelerisque eu. Et egestas quis ipsum suspendisse ultrices gravida. Porttitor leo a diam sollicitudin tempor id. Posuere urna nec tincidunt praesent. Quis viverra nibh cras pulvinar mattis nunc sed blandit libero. Dolor magna eget est lorem ipsum dolor sit amet consectetur. Risus feugiat in ante metus. Felis eget velit aliquet sagittis id consectetur purus ut faucibus. Mattis nunc sed blandit libero volutpat.
-
-Vivamus at augue eget arcu. Ac ut consequat semper viverra nam libero justo laoreet. Ut eu sem integer vitae justo eget magna fermentum iaculis. Venenatis cras sed felis eget velit aliquet sagittis id. Turpis nunc eget lorem dolor sed. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Amet venenatis urna cursus eget nunc scelerisque viverra. Justo nec ultrices dui sapien eget mi proin sed libero. Vulputate ut pharetra sit amet aliquam id diam maecenas ultricies. Commodo viverra maecenas accumsan lacus. Rhoncus mattis rhoncus urna neque viverra justo. Tempor nec feugiat nisl pretium fusce.
-
-Faucibus purus in massa tempor nec. Neque volutpat ac tincidunt vitae semper. Nisl suscipit adipiscing bibendum est ultricies. Ipsum nunc aliquet bibendum enim facilisis gravida neque convallis. Nisl pretium fusce id velit. Lectus quam id leo in. Porta non pulvinar neque laoreet suspendisse interdum consectetur libero. Amet porttitor eget dolor morbi non arcu risus quis varius. Sed adipiscing diam donec adipiscing tristique. Mi ipsum faucibus vitae aliquet nec ullamcorper sit amet. Velit aliquet sagittis id consectetur purus ut faucibus pulvinar. Et leo duis ut diam quam.
-
-
-## This is second
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget est lorem ipsum dolor sit amet. A iaculis at erat pellentesque adipiscing commodo. Amet mauris commodo quis imperdiet massa tincidunt nunc pulvinar sapien. Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum. Sapien pellentesque habitant morbi tristique senectus et. Tellus mauris a diam maecenas sed enim ut sem viverra. Praesent elementum facilisis leo vel. Urna cursus eget nunc scelerisque viverra mauris. Id cursus metus aliquam eleifend. Vel risus commodo viverra maecenas accumsan. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Ut morbi tincidunt augue interdum velit euismod. Nulla facilisi etiam dignissim diam quis enim lobortis scelerisque. Sit amet nulla facilisi morbi tempus iaculis. Sem fringilla ut morbi tincidunt augue interdum. Quis viverra nibh cras pulvinar mattis nunc sed blandit libero. Nunc lobortis mattis aliquam faucibus purus in. Ut morbi tincidunt augue interdum velit.
-
-Cursus turpis massa tincidunt dui. Fermentum odio eu feugiat pretium nibh. Augue ut lectus arcu bibendum at varius vel pharetra. Ac placerat vestibulum lectus mauris ultrices eros. Adipiscing enim eu turpis egestas pretium aenean. Commodo nulla facilisi nullam vehicula ipsum a arcu cursus vitae. Risus nullam eget felis eget nunc. Natoque penatibus et magnis dis parturient. Ornare lectus sit amet est placerat in. Eget dolor morbi non arcu risus quis. Quis blandit turpis cursus in.
-
-## third
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget est lorem ipsum dolor sit amet. A iaculis at erat pellentesque adipiscing commodo. Amet mauris commodo quis imperdiet massa tincidunt nunc pulvinar sapien. Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum. Sapien pellentesque habitant morbi tristique senectus et. Tellus mauris a diam maecenas sed enim ut sem viverra. Praesent elementum facilisis leo vel. Urna cursus eget nunc scelerisque viverra mauris. Id cursus metus aliquam eleifend. Vel risus commodo viverra maecenas accumsan. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Ut morbi tincidunt augue interdum velit euismod. Nulla facilisi etiam dignissim diam quis enim lobortis scelerisque. Sit amet nulla facilisi morbi tempus iaculis. Sem fringilla ut morbi tincidunt augue interdum. Quis viverra nibh cras pulvinar mattis nunc sed blandit libero. Nunc lobortis mattis aliquam faucibus purus in. Ut morbi tincidunt augue interdum velit.
-
-Cursus turpis massa tincidunt dui. Fermentum odio eu feugiat pretium nibh. Augue ut lectus arcu bibendum at varius vel pharetra. Ac placerat vestibulum lectus mauris ultrices eros. Adipiscing enim eu turpis egestas pretium aenean. Commodo nulla facilisi nullam vehicula ipsum a arcu cursus vitae. Risus nullam eget felis eget nunc. Natoque penatibus et magnis dis parturient. Ornare lectus sit amet est placerat in. Eget dolor morbi non arcu risus quis. Quis blandit turpis cursus in.
-## 4th
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget est lorem ipsum dolor sit amet. A iaculis at erat pellentesque adipiscing commodo. Amet mauris commodo quis imperdiet massa tincidunt nunc pulvinar sapien. Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum. Sapien pellentesque habitant morbi tristique senectus et. Tellus mauris a diam maecenas sed enim ut sem viverra. Praesent elementum facilisis leo vel. Urna cursus eget nunc scelerisque viverra mauris. Id cursus metus aliquam eleifend. Vel risus commodo viverra maecenas accumsan. Auctor neque vitae tempus quam pellentesque nec nam aliquam. Ut morbi tincidunt augue interdum velit euismod. Nulla facilisi etiam dignissim diam quis enim lobortis scelerisque. Sit amet nulla facilisi morbi tempus iaculis. Sem fringilla ut morbi tincidunt augue interdum. Quis viverra nibh cras pulvinar mattis nunc sed blandit libero. Nunc lobortis mattis aliquam faucibus purus in. Ut morbi tincidunt augue interdum velit.
-
-Cursus turpis massa tincidunt dui. Fermentum odio eu feugiat pretium nibh. Augue ut lectus arcu bibendum at varius vel pharetra. Ac placerat vestibulum lectus mauris ultrices eros. Adipiscing enim eu turpis egestas pretium aenean. Commodo nulla facilisi nullam vehicula ipsum a arcu cursus vitae. Risus nullam eget felis eget nunc. Natoque penatibus et magnis dis parturient. Ornare lectus sit amet est placerat in. Eget dolor morbi non arcu risus quis. Quis blandit turpis cursus in.
-### 4B
-
-This is a test...
+* [MicroBit.h](https://github.com/lancaster-university/codal-microbit-v2/blob/master/model/MicroBit.h) and [MicroBit.cpp](https://github.com/lancaster-university/codal-microbit-v2/blob/master/model/MicroBit.cpp) define the `uBit` object. 
+* 
